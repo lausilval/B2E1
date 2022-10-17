@@ -133,11 +133,29 @@ public class Sensor
         return minimo;
     }
 
-   // @Override
-   /* public boolean equals(Object object)
+    // @Override
+    // son iguales solo si su id es igual
+    public boolean equals(Object object)
     {
-
-    }*/
+        if(this == object)
+        {
+            return true;
+        }
+        if (object == null)
+        {
+            return false;
+        }
+        if(getClass() != object.getClass())
+        {
+            return false;
+        }
+        final Sensor other = (Sensor) object;
+        if(!this.id.equals(other.id))
+        {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public String toString()
