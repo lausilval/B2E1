@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.*;
 
 public class Estancia
 {
@@ -19,7 +18,7 @@ public class Estancia
         this.planta = planta;
 
         this.sensores = null;
-        this.coste = 0;
+        this.coste = 0f;
     }
 
     // GETTERS && SETTERS
@@ -50,13 +49,30 @@ public class Estancia
         this.sensores = sensores;
     }
 
-    public float getCoste() {
+    public float getCoste()
+    {
+        actualizarCoste();
         return coste;
     }
 
-    public void setCoste(float coste) {
+    public float actualizarCoste()
+    {
+        float res = 0f;
+        if (sensores != null)
+        {
+            for(Sensor senso: sensores)
+            {
+                res += senso.getPrecio();
+            }
+        }
+        return res;
+    }
+
+    public void setCoste(float coste)
+    {
         this.coste = coste;
     }
+
 
     // METODOS FUNCIONALES
 
@@ -66,6 +82,24 @@ public class Estancia
     {
         //tenemos que ir recorriendo el array de sensores viendo que no haya ninguno
         //igual en la misma estancia
+        if(sensores == null)
+        {
+            Set <Sensor> sensores = new HashSet<>();
+            sensores.add(sensor);
+        }
+        else
+        {
+            for(Sensor senso : sensores)
+            {
+                assert senso != null;
+                if(senso.equals(sensor))
+                {
+                    return false;
+                }
+            }
+            sensores.add(sensor);
+        }
+
         return true;
     }
 
@@ -73,6 +107,29 @@ public class Estancia
     //criterio de igualdad
     public boolean darAlta(String id, String tipo, float[] rango, float precio)
     {
+        for(Sensor senso : sensores)
+        {
+            if(senso.getId().equals(id))
+            {
+                return false;
+            }
+            else if(senso.getTipo().equals(tipo))
+            {
+                return false;
+            }
+            else if(senso.limiteInferior() == rango[0])
+            {
+                return false;
+            }
+            else if (senso.limiteSuperior() == rango[1])
+            {
+                return false;
+            }
+            else if(senso.getPrecio().equals(precio))
+            {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -81,22 +138,62 @@ public class Estancia
     //introducido correctamente o false, en caso contrario
     public boolean nuevoDato(String id, float dato)
     {
-        return true;
+        if(sensores != null)
+        {
+            for (Sensor senso : sensores) {
+                // en el caso en el que exista el id...
+                if (senso.getId().equals(id))
+                {
+                    if((senso.limiteInferior() < dato) && (senso.limiteSuperior() > dato)) {
+                        senso.nuevoDato(dato);
+                        return true;
+                    }
+                }
+            }
+        }
+        //si no hay ningun sensor con ese id
+        return false;
     }
 
     // devuelve el conjunto de sensores
     //de un determinado tipo que hay en la estancia.
     public Set<Sensor> sensoresTipo(String tipo)
     {
-        return null;
+        Set <Sensor> respuesta = new HashSet<>();
+        for(Sensor senso : sensores)
+        {
+            if(senso.getTipo().equals(tipo))
+            {
+                respuesta.add(senso);
+            }
+        }
+        return respuesta;
     }
 
     // devuelve el sensor (o sensores) de
     //un determinado tipo que ha capturado el valor máximo.
-    public Sensor[] sensorMaxValor(String tipo)
+    /*public Sensor[] sensorMaxValor(String tipo)
     {
+        Set <Sensor> aux = sensoresTipo(tipo);
+        Collections.max(Arrays.asList(aux.toArray()), );
+        Sensor[] respuesta = new Sensor[aux.size()];
+        ArrayList<Float> maximo = new ArrayList<>(aux.size());
+        for(Sensor senso : aux)
+        {
+             maximo.add(senso.maximo());
+        }
+        int cont = 0;
+        for(int i=0; i < maximo.size(); i++)
+        {
+            if(Objects.equals(Collections.max(maximo), maximo.get(i)))
+            {
+
+            }
+        }
+
+
         return null;
-    }
+    }*/
 
     //  devuelve el sensor (o sensores) de
     //un determinado tipo que ha capturado el valor mínimo.
@@ -109,6 +206,15 @@ public class Estancia
     //valor.
     public ArrayList<Float> valoresSuperiores(String id, float valor)
     {
+        ArrayList<Float> respuesta = new ArrayList<>();
+
+        for(Sensor senso: sensores)
+        {
+            if(senso.getId().equals(id))
+            {
+            }
+
+        }
         return null;
     }
 
@@ -118,8 +224,30 @@ public class Estancia
     @Override
     public boolean equals(Object object)
     {
+        if(this == object)
+        {
+            return true;
+        }
+        if(object == null)
+        {
+            return false;
+        }
+        if(getClass() != object.getClass())
+        {
+            return false;
+        }
+        final Estancia other = (Estancia) object;
+        if(!this.nombre.equals(other.nombre))
+        {
+            return false;
+        }
+        if(this.planta != other.planta)
+        {
+            return false;
+        }
         return true;
     }
+
 
 
     @Override
@@ -133,11 +261,11 @@ public class Estancia
         respuesta += "planta: " + getPlanta() + "\n";
         if (sensores != null)
         {
-            respuesta = respuesta + "sensores :  ";
+            respuesta = respuesta + "sensores:  ";
             respuesta = respuesta + "[";
+            int i = 0;
             for (Sensor sensor: sensores)
             {
-                int i = 0;
                 if (sensor.getId() != null)
                 {
                     respuesta = respuesta + sensor.getId();
@@ -147,36 +275,43 @@ public class Estancia
                     }
                 }
                 i++;
-                respuesta +=  "]" + "\n";
             }
+            respuesta +=  "]" + "\n";
         }
-    if (coste != 0)
+    if (coste != 0f)
     {
         respuesta += "coste: " + getCoste() + "\n";
 
     }
-    /** NO SE HACERLO HAY QUE CORREGIRLO
-    if( sensores != null)
+    if(sensores != null)
     {
-        respuesta += "sensores_media :" ;
+        respuesta = respuesta + "sensores_media:  ";
         respuesta = respuesta + "[";
+        int i = 0;
         for (Sensor sensor: sensores)
         {
-            int i = 0;
             if (sensor.getId() != null)
             {
+                respuesta += "{";
                 respuesta = respuesta + sensor.getId();
-                if(i != sensores.size()-1)
+                if(i != sensores.size())
                 {
                     respuesta += ", ";
                 }
             }
+            if(sensor.media() != 0f)
+            {
+                respuesta = respuesta + sensor.media();
+            }
+            respuesta += "} ";
+            if(i != sensores.size()-1)
+            {
+                respuesta += ", ";
+            }
             i++;
-            respuesta +=  "]" + "\n";
         }
-
-    }**/
-
+        respuesta +=  "]" + "\n";
+    }
         return respuesta;
     }
 

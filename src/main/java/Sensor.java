@@ -1,3 +1,4 @@
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class Sensor
@@ -5,7 +6,7 @@ public class Sensor
     // ATRIBUTOS
     String id; //identificador del sensor
     String tipo; // tipo de sensor
-    //Estancia estancia; //nombre de la estancia donde esta el sensor
+        Estancia estancia; //nombre de la estancia donde esta el sensor
     ArrayList<Float> datos; //conjunto de datos que ha capturado el sensor
     Float[] rango; //rango de valores que puede tomar el sensor
     Float precio; // precio del sensor
@@ -23,10 +24,13 @@ public class Sensor
             this.tipo = tipo;
         }
         //evitar aliasing en el rango
-        //Float[] listaRango = new ArrayList<Float>;
-        //listaRango = rango(Float);
-       // this.rango = listaRango;
-
+        if(rango != null)
+        {
+            Float[] listaRango = new Float[2];
+            listaRango[0] = rango[0];
+            listaRango[1] = rango[1];
+            this.rango = listaRango;
+        }
         if(precio != 0f)
         {
             this.precio = precio;
@@ -76,6 +80,14 @@ public class Sensor
 
     /// estancia
 
+    public void setEstancia(Estancia estancia) {
+        this.estancia = estancia;
+    }
+
+    public Estancia getEstancia() {
+        return estancia;
+    }
+
     // METODOS FUNCIONALES
 
     public float limiteInferior()  // devuelve el valor mínimo que puede tomar el sensor.
@@ -94,7 +106,15 @@ public class Sensor
 
     public void nuevoDato(float dato)  //introduce un nuevo dato capturado por el sensor
     {
-        datos.add(dato);
+        if(datos != null) {
+            if ((dato > limiteInferior()) && (dato < limiteSuperior())) {
+                datos.add(dato);
+            }
+        }
+        else
+        {
+            ArrayList<Float> datos = new ArrayList<>();
+        }
     }
 
     public float media()  // devuelve la media de los valores del sensor
@@ -109,7 +129,7 @@ public class Sensor
 
     public float maximo() // devuelve el maximo de los valores del sensor
     {
-        float maximo = 0f;
+        float maximo = datos.get(0);
         for (int i =0; i< datos.size(); i++)
         {
             if(maximo < datos.get(i))
@@ -122,7 +142,7 @@ public class Sensor
 
     public float minimo() // devuelve el minimo de los valores del sensor
     {
-        float minimo = 0f;
+        float minimo = datos.get(0);
         for (int i =0; i< datos.size(); i++)
         {
             if(minimo > datos.get(i))
@@ -170,10 +190,10 @@ public class Sensor
         {
             respuesta += "tipo: " + getTipo() + "\n";
         }
-       /* if(estancia != null)
+        if(estancia != null)
         {
             respuesta += "estancia: " + getEstancia() + "\n";
-        }*/
+        }
         if(rango != null)
         {
             respuesta = respuesta + "rango :  " ;
@@ -196,12 +216,12 @@ public class Sensor
         {
             respuesta = respuesta + "datos :  " ;
             respuesta = respuesta + "[";
-            for (int i=datos.size()-1; i <= 10; i--)
+            for (int i=datos.size()-1; i >= 0; i--)
             {
                 if (datos.get(i) != null)
                 {
                     respuesta = respuesta + datos.get(i);
-                    if(i != datos.size()-1)
+                    if(i != 0)
                     {
                         respuesta += ", ";
                     }
