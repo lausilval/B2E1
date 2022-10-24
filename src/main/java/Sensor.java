@@ -4,12 +4,12 @@ import java.util.ArrayList;
 public class Sensor
 {
     // ATRIBUTOS
-    String id; //identificador del sensor
-    String tipo; // tipo de sensor
-        Estancia estancia; //nombre de la estancia donde esta el sensor
-    ArrayList<Float> datos; //conjunto de datos que ha capturado el sensor
-    Float[] rango; //rango de valores que puede tomar el sensor
-    Float precio; // precio del sensor
+    private String id; //identificador del sensor
+    private String tipo; // tipo de sensor
+    private Estancia estancia; //nombre de la estancia donde esta el sensor
+    private ArrayList<Float> datos; //conjunto de datos que ha capturado el sensor
+    private Float[] rango; //rango de valores que puede tomar el sensor
+    private Float precio; // precio del sensor
 
 
     // CONSTRUCTORES
@@ -19,9 +19,12 @@ public class Sensor
         {
             this.id = id;
         }
-        if(tipo.equals("temperatura") || tipo.equals("sonido") || tipo.equals("luz") || tipo.equals("humedad"))
+        if(tipo != null)
         {
-            this.tipo = tipo;
+            if(tipo.equals("temperatura") || tipo.equals("sonido") || tipo.equals("luz") || tipo.equals("humedad"))
+            {
+                this.tipo = tipo;
+            }
         }
         //evitar aliasing en el rango
         if(rango != null)
@@ -46,23 +49,17 @@ public class Sensor
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     /// tipo
     public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    /// datos
+    public ArrayList<Float> getDatos() {
+        return datos;
     }
 
-    /// datos
-    public void setDatos(ArrayList<Float> datos) {
-        this.datos = datos;
-    }
 
     /// rango
     public void setRango(Float[] rango) {
@@ -74,9 +71,6 @@ public class Sensor
         return precio;
     }
 
-    public void setPrecio(Float precio) {
-        this.precio = precio;
-    }
 
     /// estancia
 
@@ -114,27 +108,37 @@ public class Sensor
         else
         {
             ArrayList<Float> datos = new ArrayList<>();
+            this.datos = datos;
+            if ((dato > limiteInferior()) && (dato < limiteSuperior())) {
+                datos.add(dato);
+            }
         }
     }
 
     public float media()  // devuelve la media de los valores del sensor
     {
         float media = 0f, suma = 0f;
-        for (Float dato : datos) {
-            suma = suma + dato;
+        if(datos != null) {
+            for (Float dato : datos) {
+                suma = suma + dato;
+            }
+            media = suma / datos.size();
         }
-        media = suma / datos.size();
         return media;
     }
 
     public float maximo() // devuelve el maximo de los valores del sensor
     {
-        float maximo = datos.get(0);
-        for (int i =0; i< datos.size(); i++)
+        float maximo = 0;
+        if(datos != null)
         {
-            if(maximo < datos.get(i))
+            maximo = datos.get(0);
+            for (int i =0; i< datos.size(); i++)
             {
-                maximo = datos.get(i);
+                if(maximo < datos.get(i))
+                {
+                    maximo = datos.get(i);
+                }
             }
         }
         return maximo;
@@ -142,14 +146,19 @@ public class Sensor
 
     public float minimo() // devuelve el minimo de los valores del sensor
     {
-        float minimo = datos.get(0);
-        for (int i =0; i< datos.size(); i++)
+        float minimo = 0;
+        if(datos != null)
         {
-            if(minimo > datos.get(i))
+            minimo = datos.get(0);
+            for (int i =0; i< datos.size(); i++)
             {
-                minimo = datos.get(i);
+                if(minimo > datos.get(i))
+                {
+                    minimo = datos.get(i);
+                }
             }
         }
+
         return minimo;
     }
 

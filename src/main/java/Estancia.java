@@ -3,10 +3,10 @@ import java.util.*;
 public class Estancia
 {
     // ATRIBUTOS
-    String nombre;  // nombre de la estancia, que también es su identificador único.
-    int planta; // planta en la que se encuentra la estancia
-    Set<Sensor> sensores; // conjunto de sensores que estan instalados en la estancia
-    float coste;    // coste de la estancia, entendida como la suma del precio de todos los sensores de la estancia
+    private String nombre;  // nombre de la estancia, que también es su identificador único.
+    private int planta; // planta en la que se encuentra la estancia
+    private Set<Sensor> sensores; // conjunto de sensores que estan instalados en la estancia
+    private float coste;    // coste de la estancia, entendida como la suma del precio de todos los sensores de la estancia
 
     // CONSTRUCTORES
     public Estancia(String nombre, int planta)
@@ -51,21 +51,8 @@ public class Estancia
 
     public float getCoste()
     {
-        actualizarCoste();
+        //actualizarCoste();
         return coste;
-    }
-
-    public float actualizarCoste()
-    {
-        float res = 0f;
-        if (sensores != null)
-        {
-            for(Sensor senso: sensores)
-            {
-                res += senso.getPrecio();
-            }
-        }
-        return res;
     }
 
     public void setCoste(float coste)
@@ -74,7 +61,21 @@ public class Estancia
     }
 
 
+
     // METODOS FUNCIONALES
+
+    public float actualizarCoste()
+    {
+        float res = 0f;
+        if (this.sensores != null)
+        {
+            for(Sensor senso: sensores)
+            {
+                res += senso.getPrecio();
+            }
+        }
+        return res;
+    }
 
     //  dar de alta un sensor, teniendo en cuenta
     //el criterio de igualdad definido en la clase Sensor.
@@ -91,15 +92,14 @@ public class Estancia
         {
             for(Sensor senso : sensores)
             {
-                assert senso != null;
-                if(senso.equals(sensor))
-                {
-                    return false;
+                if(senso != null) {
+                    if (senso.equals(sensor)) {
+                        return false;
+                    }
                 }
             }
             sensores.add(sensor);
         }
-
         return true;
     }
 
@@ -172,28 +172,47 @@ public class Estancia
 
     // devuelve el sensor (o sensores) de
     //un determinado tipo que ha capturado el valor máximo.
-    /*public Sensor[] sensorMaxValor(String tipo)
+    public Sensor[] sensorMaxValor(String tipo)
     {
-        Set <Sensor> aux = sensoresTipo(tipo);
-        Collections.max(Arrays.asList(aux.toArray()), );
-        Sensor[] respuesta = new Sensor[aux.size()];
-        ArrayList<Float> maximo = new ArrayList<>(aux.size());
-        for(Sensor senso : aux)
+        Set <Sensor> aux = sensoresTipo(tipo);  // todos los sensores que sean de ese tipo
+        Sensor[] respuesta = new Sensor[aux.size()];    // donde se va a almacenar la respuesta
+        ArrayList<Float> maximo = new ArrayList<>();    // los valores maximos que se han encontrado
+        float maxValor;
+        /*for(Sensor senso : aux)     // recorremos todos los sensores para encontrar los valores maximos
         {
-             maximo.add(senso.maximo());
-        }
-        int cont = 0;
-        for(int i=0; i < maximo.size(); i++)
-        {
-            if(Objects.equals(Collections.max(maximo), maximo.get(i)))
+            ArrayList<Float> datosSensor = senso.getDatos();    //datos de un sensor
+            maxValor = datosSensor.get(0);
+            for(Float d : datosSensor)  // recorremos sus datos
             {
-
+                if(maxValor < d)
+                {
+                    maxValor = d;
+                    maximo.add(d);
+                }
+            }
+            if(maxValor == datosSensor.get(0))  //puede ser que el primer valor sea el maximo
+            {
+                maximo.add(maxValor);
             }
         }
+        int cont = 0;
+        for(Sensor senso : aux) // vemos donde se han encontrado esos valores maximos
+        {
+            ArrayList<Float> datosSensor = senso.getDatos();    //datos de un sensor
+            for(Float d : datosSensor)
+            {
+                for(Float m: maximo)
+                {
+                    if (Objects.equals(d, m)) {
+                        respuesta[cont] = senso;
+                    }
+                }
+            }
+            cont++;
+        }*/
 
-
-        return null;
-    }*/
+        return respuesta;
+    }
 
     //  devuelve el sensor (o sensores) de
     //un determinado tipo que ha capturado el valor mínimo.
@@ -212,10 +231,18 @@ public class Estancia
         {
             if(senso.getId().equals(id))
             {
+                ArrayList<Float> sensorDatos = senso.getDatos();
+                for(Float d : sensorDatos)
+                {
+                    if(d > valor)
+                    {
+                        respuesta.add(d);
+                    }
+                }
             }
 
         }
-        return null;
+        return respuesta;
     }
 
 
