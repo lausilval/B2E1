@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9818f543-782b-4f45-861e-c7d21695651d" name="Changes" comment="version4">
+    <list default="true" id="9818f543-782b-4f45-861e-c7d21695651d" name="Changes" comment="version44">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Estancia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Estancia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/PrincipalB2E1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/PrincipalB2E1.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +66,7 @@
       <workItem from="1666448157031" duration="9629000" />
       <workItem from="1666596141922" duration="7755000" />
       <workItem from="1666620649240" duration="2587000" />
-      <workItem from="1666623243904" duration="2742000" />
+      <workItem from="1666623243904" duration="3059000" />
     </task>
     <task id="LOCAL-00001" summary="version1">
       <created>1665388634482</created>
@@ -112,7 +110,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666603293873</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="version44">
+      <created>1666626392713</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1666626392713</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -134,6 +139,7 @@
     <MESSAGE value="version2" />
     <MESSAGE value="version3" />
     <MESSAGE value="version4" />
-    <option name="LAST_COMMIT_MESSAGE" value="version4" />
+    <MESSAGE value="version44" />
+    <option name="LAST_COMMIT_MESSAGE" value="version44" />
   </component>
 </project>
