@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class PrincipalB2E1
 {
@@ -11,7 +8,7 @@ public class PrincipalB2E1
         // a. Crear los sensores sensor1, sensor2, sensor3 y sensor4 con los argumentos indicados en
         //el fichero Excel (B2E1_instancias.xls).
         float[] rango1 =  {-5f, 35f};
-        Sensor sensor1 = new Sensor("100", "temperatura", rango1,54.4f);
+        Sensor sensor1 = new Sensor("100", "temperatura", new float[]{-5f, 35f},54.4f);
         float[] rango2 =  {-5f, 40f};
         Sensor sensor2 = new Sensor("101", "temperatura", rango2, 48.5f);
         float[] rango3 =  {0f, 120f};
@@ -42,7 +39,7 @@ public class PrincipalB2E1
         //como argumento la instancia de la clase Sensor e indicando si el sensor se ha dado de alta
         //correctamente o no.
         System.out.println("APARTADO D) -----------------------------------------------------------------------------------------------------------");
-        Set <Sensor> sensores = new HashSet<>();
+        Set <Sensor> sensores = new HashSet<Sensor>();
         estancia1.setSensores(sensores);
         System.out.println("Sensor1: " + estancia1.darAlta(sensor1));
         System.out.println("Sensor2: " + estancia1.darAlta(sensor2));
@@ -134,15 +131,18 @@ public class PrincipalB2E1
         System.out.println("APARTADO H) -----------------------------------------------------------------------------------------------------------");
 
         float[] rango5 =  {0f, 118f};
-        Sensor sensor5 = new Sensor("202", "sonido", rango5,28.4f);
+       // Sensor sensor5 = new Sensor("202", "sonido", rango5,28.4f);
         float[] rango6 =  {0f, 100f};
-        Sensor sensor6 = new Sensor("301", "humedad", rango6, 34.3f);
+        //Sensor sensor6 = new Sensor("301", "humedad", rango6, 34.3f);
         float[] rango7 =  {0f, 100f};
-        Sensor sensor7 = new Sensor("302", "humedad", rango7, 42.5f);
+       // Sensor sensor7 = new Sensor("302", "humedad", rango7, 42.5f);
 
-        System.out.println("Sensor5: " + estancia1.darAlta(sensor5));
-        System.out.println("Sensor6: " + estancia1.darAlta(sensor6));
-        System.out.println("Sensor7: " + estancia1.darAlta(sensor7));
+        System.out.println("Sensor5: " + estancia1.darAlta("202", "sonido", rango5,28.4f));
+        System.out.println("Sensor6: " + estancia1.darAlta("301", "humedad", rango6, 34.3f));
+        System.out.println("Sensor7: " + estancia1.darAlta("302", "humedad", rango7, 42.5f));
+        Sensor sensor5 = estancia1.sensorNombre("202");
+        Sensor sensor6 = estancia1.sensorNombre("301");
+        Sensor sensor7 = estancia1.sensorNombre("302");
 
         //i. Mostrar por pantalla los límites superiores e inferiores de los rangos de valores para todas las
         //instancias creadas en (h).
@@ -227,18 +227,43 @@ public class PrincipalB2E1
         //n. Mostrar por pantalla las características de los sensores de "temperatura" que hay en estancia1.
         System.out.println("APARTADO N) -----------------------------------------------------------------------------------------------------------");
         Set <Sensor> sensoresTemperatura = estancia1.sensoresTipo("temperatura");
-        System.out.println("Sensores de temperatura: " + sensoresTemperatura);
+        System.out.println("Sensores de temperatura: ");
+        Iterator<Sensor> valueTemp = sensoresTemperatura.iterator();
+        while(valueTemp.hasNext())
+        {
+            System.out.println(valueTemp.next());
+        }
 
         //o. Mostrar por pantalla las características de los sensores de "sonido" que hay en estancia1.
         System.out.println("APARTADO O) -----------------------------------------------------------------------------------------------------------");
         Set <Sensor> sensoresSonido = estancia1.sensoresTipo("sonido");
-        System.out.println("Sensores de sonido: " + sensoresSonido);
+        System.out.println("Sensores de sonido: " );
+        Iterator<Sensor> valueSon = sensoresSonido.iterator();
+        while(valueSon.hasNext())
+        {
+            System.out.println(valueSon.next());
+        }
 
         //p. Mostrar por pantalla las características del sensor de "humedad" que ha capturado el valor máximo
         //y el mínimo en la estancia1.
         System.out.println("APARTADO P) -----------------------------------------------------------------------------------------------------------");
         Sensor[] humedadMaxValor = estancia1.sensorMaxValor("humedad");
-        System.out.println("Sensores con maximo valor humedad:" + Arrays.toString(humedadMaxValor));
+        System.out.println("Sensores con maximo valor de humedad:");
+        for (Sensor senso: humedadMaxValor)
+        {
+            if(senso != null)
+            {
+                System.out.println(senso);
+            }
+        }
+        /**** ERROR QUE IMPRIME ALGO QUE NO EXISTE ****/
+        Sensor[] humedadMinValor = estancia1.sensorMinValor("humedad");
+        System.out.println("Sensores con minimo valor de humedad:");
+        Iterator<Sensor> valueMinHum = Arrays.stream(humedadMinValor).iterator();
+        while(valueMinHum.hasNext())
+        {
+            System.out.println(valueMinHum.next());
+        }
 
         //q. Para el sensor cuyo id es 301, mostrar por pantalla la lista de valores mayores de 33.
         System.out.println("APARTADO Q) -----------------------------------------------------------------------------------------------------------");
@@ -260,7 +285,6 @@ public class PrincipalB2E1
         coste = estancia1.actualizarCoste();
         estancia1.setCoste(coste);
         System.out.println(estancia1.toString());
-
 
     }
 
