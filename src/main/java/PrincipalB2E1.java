@@ -140,6 +140,7 @@ public class PrincipalB2E1
         System.out.println("Sensor5: " + estancia1.darAlta("202", "sonido", rango5,28.4f));
         System.out.println("Sensor6: " + estancia1.darAlta("301", "humedad", rango6, 34.3f));
         System.out.println("Sensor7: " + estancia1.darAlta("302", "humedad", rango7, 42.5f));
+        // funcion propia para poder imprimir los datos de los sensores
         Sensor sensor5 = estancia1.sensorNombre("202");
         Sensor sensor6 = estancia1.sensorNombre("301");
         Sensor sensor7 = estancia1.sensorNombre("302");
@@ -172,7 +173,7 @@ public class PrincipalB2E1
         //l. Introducir los valores de los sensores creados en (h) que están indicados en el fichero Excel, usando
         //el método nuevoDato de la clase Estancia y mostrando por pantalla si cada dato ha sido
         //introducido correctamente o no.
-        System.out.println("APARTADO E) -----------------------------------------------------------------------------------------------------------");
+        System.out.println("APARTADO L) -----------------------------------------------------------------------------------------------------------");
         System.out.println("Sensor5:");
         System.out.println("- rango -> [" + sensor5.limiteInferior() + ", " + sensor5.limiteSuperior() + "]");
         System.out.println("\t Dato 1:  5.1  -> " + estancia1.nuevoDato("202", 5.1f));
@@ -256,13 +257,14 @@ public class PrincipalB2E1
                 System.out.println(senso);
             }
         }
-        /**** ERROR QUE IMPRIME ALGO QUE NO EXISTE ****/
         Sensor[] humedadMinValor = estancia1.sensorMinValor("humedad");
         System.out.println("Sensores con minimo valor de humedad:");
-        Iterator<Sensor> valueMinHum = Arrays.stream(humedadMinValor).iterator();
-        while(valueMinHum.hasNext())
+        for (Sensor senso: humedadMinValor)
         {
-            System.out.println(valueMinHum.next());
+            if(senso != null)
+            {
+                System.out.println(senso);
+            }
         }
 
         //q. Para el sensor cuyo id es 301, mostrar por pantalla la lista de valores mayores de 33.

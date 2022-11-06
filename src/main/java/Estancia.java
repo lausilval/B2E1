@@ -26,7 +26,10 @@ public class Estancia {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if(nombre != null)
+        {
+            this.nombre = nombre;
+        }
     }
 
     public int getPlanta() {
@@ -43,7 +46,10 @@ public class Estancia {
 */
 
     public void setSensores(Set<Sensor> sensores) {
-        this.sensores = sensores;
+        if(sensores != null)
+        {
+            this.sensores = sensores;
+        }
     }
 
     public float getCoste() {
@@ -52,7 +58,10 @@ public class Estancia {
     }
 
     public void setCoste(float coste) {
-        this.coste = coste;
+        if(coste > 0f)
+        {
+            this.coste = coste;
+        }
     }
 
 
@@ -73,142 +82,188 @@ public class Estancia {
     public boolean darAlta(Sensor sensor) {
         //tenemos que ir recorriendo el array de sensores viendo que no haya ninguno
         //igual en la misma estancia
-        if (sensores == null) {
-            Set<Sensor> sensores = new HashSet<Sensor>();
-            this.sensores = sensores;
-            sensores.add(sensor);
-        } else {
-            for (Sensor senso : sensores) {
-                if (senso != null) {
-                    if (senso.equals(sensor)) {
-                        return false;
+        if(sensor != null)
+        {
+            if (sensores == null) {
+                Set<Sensor> sensores = new HashSet<Sensor>();
+                this.sensores = sensores;
+                sensores.add(sensor);
+            } else {
+                for (Sensor senso : sensores) {
+                    if (senso != null) {
+                        if (senso.equals(sensor)) {
+                            return false;
+                        }
                     }
                 }
+                sensores.add(sensor);
+                this.coste = actualizarCoste();
             }
-            sensores.add(sensor);
+            return true;
         }
-        return true;
+        return false;
     }
 
     //dar de alta un sensor a partir de su id, tipo, rango y precio, teniendo en cuenta el
     //criterio de igualdad
     public boolean darAlta(String id, String tipo, float[] rango, float precio)
     {
-        for (Sensor senso : sensores) {
-            if (senso.getId().equals(id))
-            {
-                return false;
+        if((id != null) && (tipo != null) && (rango != null) && (precio != 0))
+        {
+            if (sensores != null) {
+                for (Sensor senso : sensores) {
+                    if (senso.getId().equals(id)) {
+                        return false;
+                    }
+                }
+                Sensor nuevoSensor = new Sensor(id, tipo, rango, precio);
+                this.sensores.add(nuevoSensor);
+                this.coste = actualizarCoste();
+                return true;
+            } else {
+                Set<Sensor> sensores = new HashSet<>();
+                Sensor nuevoSensor = new Sensor(id, tipo, rango, precio);
+                sensores.add(nuevoSensor);
+                this.sensores = sensores;
+                this.coste = actualizarCoste();
+                return true;
             }
         }
-        Sensor nuevoSensor = new Sensor(id, tipo, rango, precio);
-        this.sensores.add(nuevoSensor);
-        return true;
+        return false;
     }
 
     //introducir un nuevo dato
     //capturado por el sensor que tiene un determinado identificador id, devolviendo true si ha sido
     //introducido correctamente o false, en caso contrario
-    public boolean nuevoDato(String id, float dato) {
-        if (sensores != null) {
-            for (Sensor senso : sensores) {
-                // en el caso en el que exista el id...
-                if (senso.getId().equals(id)) {
-                    if ((senso.limiteInferior() < dato) && (senso.limiteSuperior() > dato)) {
-                        senso.nuevoDato(dato);
-                        return true;
+    public boolean nuevoDato(String id, float dato)
+    {
+        if((id != null))
+        {
+            if (sensores != null) {
+                for (Sensor senso : sensores) {
+                    // en el caso en el que exista el id...
+                    if (senso.getId().equals(id)) {
+                        if ((senso.limiteInferior() < dato) && (senso.limiteSuperior() > dato)) {
+                            senso.nuevoDato(dato);
+                            return true;
+                        }
                     }
                 }
             }
+            //si no hay ningun sensor con ese id
+            return false;
         }
-        //si no hay ningun sensor con ese id
         return false;
     }
 
     ////FUNCION PROPIA
+    // funcion para poder atribuir los ids a un nombre y asi poder imprimir los datos de los sensores
     public Sensor sensorNombre(String id)
     {
-        Sensor respuesta = null;
-        for (Sensor sensor: sensores)
+        if(id!= null)
         {
-            if(sensor.getId().equals(id))
+            Sensor respuesta = null;
+            if(sensores != null)
             {
-                respuesta = sensor;
+                for (Sensor sensor : sensores)
+                {
+                    if (sensor.getId().equals(id)) {
+                        respuesta = sensor;
+                    }
+                }
             }
+            return respuesta;
         }
-        return respuesta;
+        return null;
     }
 
     // devuelve el conjunto de sensores
     //de un determinado tipo que hay en la estancia.
-    public Set<Sensor> sensoresTipo(String tipo) {
-        Set<Sensor> respuesta = new HashSet<Sensor>();
-        for (Sensor senso : sensores) {
-            if (senso.getTipo().equals(tipo)) {
-                respuesta.add(senso);
+    public Set<Sensor> sensoresTipo(String tipo)
+    {
+        if(tipo != null) {
+            Set<Sensor> respuesta = new HashSet<Sensor>();
+            if (sensores != null) {
+                for (Sensor senso : sensores) {
+                    if (senso.getTipo().equals(tipo)) {
+                        respuesta.add(senso);
+                    }
+                }
             }
+            return respuesta;
         }
-        return respuesta;
+        return null;
     }
 
     // devuelve el sensor (o sensores) de
     //un determinado tipo que ha capturado el valor máximo.
     public Sensor[] sensorMaxValor(String tipo) {
-        Set<Sensor> aux = sensoresTipo(tipo);  // todos los sensores que sean de ese tipo
-        Sensor[] respuesta = new Sensor[aux.size()];    // donde se va a almacenar la respuesta
-        float maxValor = 0;
-        int i = 0, j = 0;
-        for (Sensor senso : aux) {
-            if (i == 0) {
-                maxValor = senso.maximo();
-                i++;
+        if(tipo != null) {
+            Set<Sensor> aux = sensoresTipo(tipo);  // todos los sensores que sean de ese tipo
+            Sensor[] respuesta = new Sensor[aux.size()];    // donde se va a almacenar la respuesta
+            float maxValor = 0;
+            int i = 0, j = 0;
+            for (Sensor senso : aux) {
+                if (i == 0) {
+                    maxValor = senso.maximo();
+                    i++;
+                }
+                if (maxValor <= senso.maximo()) {
+                    maxValor = senso.maximo();
+                    respuesta[j] = senso;
+                    j++;
+                }
             }
-            if (maxValor <= senso.maximo()) {
-                maxValor = senso.maximo();
-                respuesta[j] = senso;
-                j++;
-            }
+            return respuesta;
         }
-        return respuesta;
+        return null;
     }
 
     //  devuelve el sensor (o sensores) de
     //un determinado tipo que ha capturado el valor mínimo.
     public Sensor[] sensorMinValor(String tipo) {
-        Set<Sensor> aux = sensoresTipo(tipo);  // todos los sensores que sean de ese tipo
-        Sensor[] respuesta = new Sensor[aux.size()];    // donde se va a almacenar la respuesta
-        float minValor = 0;
-        int i = 0, j = 0;
-        for (Sensor senso : aux) {
-            if (i == 0) {
-                minValor = senso.minimo();
-                i++;
+        if(tipo != null) {
+            Set<Sensor> aux = sensoresTipo(tipo);  // todos los sensores que sean de ese tipo
+            Sensor[] respuesta = new Sensor[aux.size()];    // donde se va a almacenar la respuesta
+            float minValor = 0;
+            int i = 0, j = 0;
+            for (Sensor senso : aux) {
+                if (i == 0) {
+                    minValor = senso.minimo();
+                    i++;
+                }
+                if (minValor > senso.minimo()) {
+                    minValor = senso.minimo();
+                    respuesta[j] = senso;
+                    j++;
+                }
             }
-            if (minValor >= senso.minimo()) {
-                minValor = senso.minimo();
-                respuesta[j] = senso;
-                j++;
-            }
+            return respuesta;
         }
-        return respuesta;
+        return null;
     }
 
     // devuelve el conjunto de valores de un sensor con identificador id que superan un determinado
     //valor.
-    public ArrayList<Float> valoresSuperiores(String id, float valor) {
-        ArrayList<Float> respuesta = new ArrayList<>();
+    public ArrayList<Float> valoresSuperiores(String id, float valor)
+    {
+        if(id != null) {
+            ArrayList<Float> respuesta = new ArrayList<>();
 
-        for (Sensor senso : sensores) {
-            if (senso.getId().equals(id)) {
-                ArrayList<Float> sensorDatos = senso.getDatos();
-                for (Float d : sensorDatos) {
-                    if (d > valor) {
-                        respuesta.add(d);
+            for (Sensor senso : sensores) {
+                if (senso.getId().equals(id)) {
+                    ArrayList<Float> sensorDatos = senso.getDatos();
+                    for (Float d : sensorDatos) {
+                        if (d > valor) {
+                            respuesta.add(d);
+                        }
                     }
                 }
-            }
 
+            }
+            return respuesta;
         }
-        return respuesta;
+        return null;
     }
 
 
